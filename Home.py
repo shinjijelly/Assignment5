@@ -1,25 +1,136 @@
+
 import pygame
 import sys
 
-
+# 초기화
 pygame.init()
 
-WIDTH, HEIGHT = 1000, 700
+# 화면 크기 설정
+WIDTH, HEIGHT = 900, 700
+
+# 색상
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+# 폰트 설정 (경로를 시스템에 맞게 조정)
+font_path = "C:/Windows/Fonts/malgun.ttf"  # Windows의 경우
+font = pygame.font.Font(font_path, 36)
+
+# 홈 버튼 생성 함수
+def create_home_button():
+    text_surface = font.render("홈", True, BLACK)
+    text_rect = text_surface.get_rect(topleft=(10, 10))
+    pygame.draw.rect(screen, WHITE, text_rect)
+    screen.blit(text_surface, text_rect)
+    return text_rect
+
+# 미니게임 페이지 생성 함수
+def game1_page():
+    while True:
+        screen.fill(WHITE)
+        
+        home_button = create_home_button()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if home_button.collidepoint(event.pos):
+                    return
+
+        pygame.display.flip()
+
+def game2_page():
+    while True:
+        screen.fill(WHITE)
+        
+        home_button = create_home_button()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if home_button.collidepoint(event.pos):
+                    return
+
+        pygame.display.flip()
+
+def game3_page():
+    while True:
+        screen.fill(WHITE)
+        
+        home_button = create_home_button()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if home_button.collidepoint(event.pos):
+                    return
+
+        pygame.display.flip()
+
+def game4_page():
+    while True:
+        screen.fill(WHITE)
+        
+        home_button = create_home_button()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if home_button.collidepoint(event.pos):
+                    return
+
+        pygame.display.flip()
+
+# 버튼 생성 함수
+def create_button(x, y, text, game_func):
+    text_surface = font.render(text, True, BLACK)
+    text_rect = text_surface.get_rect(center=(x, y))
+    pygame.draw.rect(screen, WHITE, text_rect)
+    screen.blit(text_surface, text_rect)
+    return text_rect, game_func
+
+# 메인 페이지 루프
+def main_page():
+    while True:
+        # 화면을 흰색으로 채우기
+        screen.fill(WHITE)
+        
+        # 이벤트 처리
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if B1.collidepoint(x, y):
+                    game1_page()
+                elif B2.collidepoint(x, y):
+                    game2_page()
+                elif B3.collidepoint(x, y):
+                    game3_page()
+                elif B4.collidepoint(x, y):
+                    game4_page()
+
+        # 버튼 생성 및 버튼 영역 및 실행 함수 저장
+        B1, game1_func = create_button(WIDTH // 2, HEIGHT // 4, "게임1", game1_page)
+        B2, game2_func = create_button(WIDTH // 2, HEIGHT // 4 + 100, "게임2", game2_page)
+        B3, game3_func = create_button(WIDTH // 2, HEIGHT // 4 + 200, "게임3", game3_page)
+        B4, game4_func = create_button(WIDTH // 2, HEIGHT // 4 + 300, "게임4", game4_page)
+
+        # 화면 업데이트
+        pygame.display.flip()
+
+# 화면 생성
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Group 11 Assignment')
+pygame.display.set_caption("미니게임 메인 페이지")
 
-
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    
-    screen.fill((255, 255, 255))
-   
-    pygame.display.flip()
-
-#종료
-pygame.quit()
-sys.exit()
+# 메인 페이지 실행
+main_page()

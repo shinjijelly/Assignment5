@@ -1,6 +1,9 @@
 import pygame
 import sys
-
+from game1 import game1_page
+from game2 import game2_page
+from game3 import game3_page
+from game4 import game4_page
 
 pygame.init()
 

@@ -42,6 +42,7 @@ def game1_page(screen, font, WHITE, BLACK):
             self.image = pygame.Surface([width, height])
             self.image.fill(color)
             self.rect = self.image.get_rect()
+            self.color = color
 
     import random
     class Ball(pygame.sprite.Sprite):
@@ -98,6 +99,11 @@ def game1_page(screen, font, WHITE, BLACK):
                     self.speed_y *= -1  # 아래쪽 면 충돌
                 if abs(self.rect.top - brick.rect.bottom) < collision_tolerance and self.speed_y < 0:
                     self.speed_y *= -1  # 위쪽 면 충돌
+
+                if(brick.color == YELLOW):
+                    brick.image.fill(GREEN)
+                    brick.color = GREEN
+                    continue
                 
                 bricks_group.remove(brick)
 
@@ -131,6 +137,8 @@ def game1_page(screen, font, WHITE, BLACK):
     game_start = False
     
     initial_n = 3
+    stage = 1
+    #hit_limit = 1
 
     bricks_group = pygame.sprite.Group()
 
@@ -170,7 +178,9 @@ def game1_page(screen, font, WHITE, BLACK):
 
         if len(bricks_group) == 0:
             if(game_start):
+                initial_n += 1
                 ball.start()
+                stage += 1
                 game_start = False
                 pygame.time.delay(1000)
 
@@ -187,7 +197,12 @@ def game1_page(screen, font, WHITE, BLACK):
 
             for row in range(n):
                 for column in range(n):
-                    brick = Brick(GREEN, brick_width, brick_height)
+                    is_yellow = random.random() < 0.3  # 30% 확률로 노란색 벽돌 생성
+                    if is_yellow:
+                        brick_color = YELLOW
+                    else:
+                        brick_color = GREEN
+                    brick = Brick(brick_color, brick_width, brick_height)
                     brick.rect.x = start_x + column * (brick_width + brick_padding)
                     brick.rect.y = row * (max_brick_height + brick_padding) + ceiling_rect.bottom + brick_padding
                     bricks_group.add(brick)
@@ -197,12 +212,14 @@ def game1_page(screen, font, WHITE, BLACK):
         # 홈 버튼 그리기
         home_button = create_home_button(screen, font, WHITE, BLACK)
 
-        # 남은 블럭 개수
-
-        # Display remaining bricks and stage on the ceiling
+        # 남은 블럭 개수 + 스테이지
         text_remaining_bricks = font.render(f'남은 벽돌: {len(bricks_group)}', True, BLACK)
         text_remaining_bricks_rect = text_remaining_bricks.get_rect(center=(ceiling_rect.centerx, ceiling_rect.centery))
         screen.blit(text_remaining_bricks, text_remaining_bricks_rect)
+
+        text_stage = font.render(f'스테이지: {stage}', True, BLACK)
+        text_stage_rect = text_stage.get_rect(midright=(ceiling_rect.right - 10, ceiling_rect.centery))
+        screen.blit(text_stage, text_stage_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

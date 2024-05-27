@@ -119,6 +119,7 @@ def game1_page(screen, font, WHITE, BLACK):
                     self.rect.left = paddle.rect.right  # 충돌 후 위치 조정
                     self.speed_x *= -1
 
+            
             # 벽과 충돌
             if pygame.sprite.spritecollide(self, [left_wall, right_wall], False):
                 self.speed_x *= -1  
@@ -158,12 +159,6 @@ def game1_page(screen, font, WHITE, BLACK):
             # 공의 초기 위치 설정
             self.rect.centerx = paddle.rect.centerx
             self.rect.bottom = paddle.rect.top - 30
-
-    def stop_all_sounds():
-        pygame.mixer.music.stop()
-        collision_sound.stop()
-        break_sound.stop()
-        next_sound.stop()
 
     # 벽 생성
     left_wall = Wall(BLACK, 100, screen.get_height() - 50)   # 왼쪽 벽
@@ -205,6 +200,8 @@ def game1_page(screen, font, WHITE, BLACK):
 
     reset_text_blink = True  # 텍스트 깜빡임을 제어하기 위한 플래그
 
+    is_muted = False
+
     while True:
         screen.fill(WHITE)
 
@@ -226,6 +223,7 @@ def game1_page(screen, font, WHITE, BLACK):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if home_button.collidepoint(event.pos):
                     pygame.mixer.music.pause()
+                    pygame.display.set_caption("미니게임 메인 페이지")
                     return
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and game_over:  # 게임 오버 상태에서 스페이스바가 눌린 경우
@@ -238,8 +236,19 @@ def game1_page(screen, font, WHITE, BLACK):
                     pygame.mixer.music.load("Breakgame/BGM.wav")
                     pygame.mixer.music.play(-1)
                     pygame.display.flip()
-                if event.key == pygame.K_ESCAPE:
-                    stop_all_sounds()
+                if event.key == pygame.K_m:                    # mute all
+                    is_muted = not is_muted
+                    if(is_muted):
+                        pygame.mixer.music.set_volume(0)
+                        collision_sound.set_volume(0)
+                        break_sound.set_volume(0)
+                        next_sound.set_volume(0)
+                    else:
+                        pygame.mixer.music.set_volume(0.1)
+                        collision_sound.set_volume(1)
+                        break_sound.set_volume(1)
+                        next_sound.set_volume(1)
+
                 
         if len(bricks_group) == 0:
                 if(game_start):
@@ -298,8 +307,6 @@ def game1_page(screen, font, WHITE, BLACK):
                 game_over = True  # 게임 오버 상태로 전환
 
             # 남은 블럭 개수 + 스테이지
-
-            # Display remaining bricks and stage on the ceiling
             text_remaining_bricks = font.render(f'남은 벽돌: {len(bricks_group)}', True, WHITE)
             text_remaining_bricks_rect = text_remaining_bricks.get_rect(center=(ceiling_rect.centerx, ceiling_rect.centery))
             screen.blit(text_remaining_bricks, text_remaining_bricks_rect)
@@ -321,12 +328,12 @@ def game1_page(screen, font, WHITE, BLACK):
             screen.blit(game_over_text, game_over_rect)
 
             # "Press spacebar to reset" 텍스트 표시
-            if reset_text_blink:  # 깜빡임 플래그가 True일 때만 텍스트를 그립니다.
+            if reset_text_blink:  # 깜빡임 플래그가 True일 때만 텍스트 표시
                 reset_text = font.render("Press Spacebar to game", True, (255, 0, 0))  # 빨간색으로 렌더링
                 reset_rect = reset_text.get_rect(center=(screen.get_width() // 2, game_over_rect.bottom + 20))
                 screen.blit(reset_text, reset_rect)
 
-            # 일정 시간마다 텍스트 깜빡임을 제어하는 플래그를 변경합니다.
+            # 일정 시간마다 텍스트 깜빡임을 제어하는 플래그를 변경
             if pygame.time.get_ticks() % 1000 < 500:
                 reset_text_blink = True
             else:
@@ -335,7 +342,6 @@ def game1_page(screen, font, WHITE, BLACK):
         # 홈 버튼 그리기
         home_button = create_home_button(screen, font, WHITE, BLACK)
 
-        #pygame.display.update()
         pygame.display.flip()
         clock.tick(60)
 

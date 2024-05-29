@@ -1,14 +1,41 @@
 import pygame
 import sys
 
+# 보드 크기와 셀 크기 정의
+BOARD_SIZE = 19
+CELL_SIZE = 30
+BOARD_WIDTH = BOARD_SIZE * CELL_SIZE
+BOARD_HEIGHT = BOARD_SIZE * CELL_SIZE
+
+# 색상 정의
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+LIGHT_GRAY = (211, 211, 211)
+
+# 화면 크기 정의
+SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 700
+
+# 게임 초기화
+pygame.init()
+font = pygame.font.SysFont(None, 36)
+
+def draw_board(screen):
+    offset_x = (SCREEN_WIDTH - BOARD_WIDTH) // 2
+    offset_y = (SCREEN_HEIGHT - BOARD_HEIGHT) // 2
+    for row in range(BOARD_SIZE):
+        for col in range(BOARD_SIZE):
+            rect = pygame.Rect(offset_x + col * CELL_SIZE, offset_y + row * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            pygame.draw.rect(screen, LIGHT_GRAY, rect, 1)
+
 def game2_page(screen, font, WHITE, BLACK):
     while True:
         screen.fill(WHITE)
         
         home_button = create_home_button(screen, font, WHITE, BLACK)
         
-        # 오목 게임의 시작 화면 추가 (이 부분은 추후 구현 예정)
-        draw_text("Omok Game Start Screen", font, BLACK, screen, 450, 350)
+    
+        draw_board(screen)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

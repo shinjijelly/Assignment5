@@ -10,6 +10,7 @@ BOARD_HEIGHT = BOARD_SIZE * CELL_SIZE
 # 색상 정의
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+LIGHT_GRAY = (211, 211, 211)
 BACKGROUND_COLOR = (200, 200, 200)  # 연한 회색
 
 # 화면 크기 정의
@@ -52,6 +53,32 @@ def draw_board(screen):
     pygame.draw.line(screen, BLACK, (offset_x, offset_y + (BOARD_SIZE - 1) * CELL_SIZE), (offset_x + (BOARD_SIZE - 1) * CELL_SIZE, offset_y + (BOARD_SIZE - 1) * CELL_SIZE))
     pygame.draw.line(screen, BLACK, (offset_x + (BOARD_SIZE - 1) * CELL_SIZE, offset_y), (offset_x + (BOARD_SIZE - 1) * CELL_SIZE, offset_y + (BOARD_SIZE - 1) * CELL_SIZE))
 
+def check_winner(board):
+    # 승리 조건을 검사합니다.
+    for row in range(BOARD_SIZE):
+        for col in range(BOARD_SIZE):
+            if board[row][col] != 0 and (
+                check_line(board, row, col, 1, 0) or
+                check_line(board, row, col, 0, 1) or
+                check_line(board, row, col, 1, 1) or
+                check_line(board, row, col, 1, -1)
+            ):
+                return board[row][col]
+    return 0
+
+def check_line(board, row, col, d_row, d_col):
+    # 주어진 방향으로 5개의 돌이 일렬로 놓여 있는지 확인합니다.
+    player = board[row][col]
+    count = 0
+    for i in range(5):
+        r = row + i * d_row
+        c = col + i * d_col
+        if 0 <= r < BOARD_SIZE and 0 <= c < BOARD_SIZE and board[r][c] == player:
+            count += 1
+        else:
+            break
+    return count == 5
+
 def game2_page(screen, font, WHITE, BLACK):
     global turn
     while True:
@@ -60,6 +87,15 @@ def game2_page(screen, font, WHITE, BLACK):
         home_button = create_home_button(screen, font, WHITE, BLACK)
         
         draw_board(screen)
+        
+        draw_text(f"Player {turn}'s Turn", font, BLACK, screen, SCREEN_WIDTH // 2, 30)
+        
+        winner = check_winner(board)
+        if winner:
+            draw_text(f"Player {winner} Wins!", font, BLACK, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT - 50)
+            pygame.display.flip()
+            pygame.time.wait(2000)
+            return
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

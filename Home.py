@@ -15,6 +15,7 @@ WIDTH, HEIGHT = 900, 700
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+
 # 폰트 설정 (경로를 시스템에 맞게 조정)
 font_path = "C:/Windows/Fonts/malgun.ttf"  # Windows의 경우
 font = pygame.font.Font(font_path, 36)

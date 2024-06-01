@@ -40,14 +40,18 @@ def game3_page(screen, font, WHITE, BLACK):
     title_text = title.render("2048",True,(119,110,101))
     game_over = False
     game_clear = False
-
+    board_values = [ [0 for i in range(4)] for i in range(4)]   
+    score=0
+    
     while True:
         screen.fill(color['bg'])
 
         home_button = create_home_button(screen, font, WHITE, BLACK)
-        screen.blit(title_text, (360,0))
-        draw_board(screen)
-        draw_block(screen)
+        
+        screen.blit(title_text, (360,0))            
+        
+        draw_board(screen)                          #보드 판을 그림
+        draw_block(screen)                          #블록을 그림
         
         if(create or create_count < 2):              #처음 시작 시 블록 2개 생성
             board_values, game_over = create_block(board_values)
@@ -71,7 +75,6 @@ def game3_page(screen, font, WHITE, BLACK):
                 if home_button.collidepoint(event.pos):
                     return
             elif event.type == pygame.KEYUP:
-
                 if game_over or game_clear:         # 게임 오버된 경우
                     if event.key == pygame.K_s:        # S 누르면 start
                         board_values = [ [0 for i in range(4)] for i in range(4)]   #초기화

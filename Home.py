@@ -15,6 +15,11 @@ WIDTH, HEIGHT = 900, 700
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+# 배경 음악 로드 및 재생
+pygame.mixer.music.load('resources/mainbgm.ogg')
+pygame.mixer.music.play(-1)  # -1은 무한 반복 재생
+pygame.mixer.music.set_volume(0.2)
+
 # 폰트 설정 (경로를 시스템에 맞게 조정)
 font_path = "resources/mainFont.ttf"  # 폰트 파일 경로
 font_path2 = "resources/mainFont2.ttf" 
@@ -85,12 +90,14 @@ def draw_multiline_text_box(surface, text, font, x, y, box_color, text_color, al
 def Instruction_text(game_type):
     if game_type == "Break":
         Instruction_text = (
+                            "[벽돌깨기]\n"
                             "1. 좌우 방향키로 패들을 움직입니다.\n"
                             "2. 패들로 공을 부딪혀 벽돌을 모두 부수게 되면 다음 스테이지로 진출합니다.\n"
                             "3. 노란색 벽돌은 모두 두 번 부딪혀야 제거됩니다.\n"
                             "4. 공이 화면 밖으로 나가게 되면 게임이 종료됩니다.")
     if game_type == "Omok":
         Instruction_text = (
+                            "[오목]\n"
                             "1. 두 명의 플레이어가 번갈아 가며 돌을 놓습니다.\n"
                             "2. 흑돌이 먼저 시작합니다.\n"
                             "3. 돌은 빈 칸에만 놓을 수 있습니다.\n"
@@ -98,12 +105,14 @@ def Instruction_text(game_type):
                             "5. 먼저 가로, 세로, 대각선으로 5개의 돌을 연속으로 놓는 플레이어가 이깁니다.")
     if game_type == "Box":
         Instruction_text =  (
+                            "[2048]\n"
                             "1. 방향키로 타일을 이동시킵니다.\n"
                             "2. 같은 숫자의 타일이 충돌하면 합쳐집니다.\n"
                             "3. 방향키 이동 시 새로운 타일이 빈 칸에 나타납니다.\n"
                             "4. 타일이 꽉 차서 더 이상 이동할 수 없으면 게임은 종료됩니다.")
     if game_type == "Tetris":
         Instruction_text =  (
+                            "[테트리스]\n"
                             "1. .\n"
                             "2. .\n"
                             "3. .\n"
@@ -129,28 +138,27 @@ def main_page():
             B3, game3_func = create_button2(WIDTH // 3, HEIGHT // 4 + 300, game3_image, game3_page)
             B4, game4_func = create_button2(WIDTH // 3 + 300, HEIGHT // 4 + 300, game4_image, game4_page)
 
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if B1.collidepoint(mouse_x,mouse_y):
+                pygame.draw.rect(screen,(255,0,0),[200,75,200,200],5)
+                instruction_text = Instruction_text("Break")
+                draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
+            if B2.collidepoint(mouse_x,mouse_y):
+                pygame.draw.rect(screen,(255,0,0),[500,75,200,200],5)
+                instruction_text = Instruction_text("Omok")
+                draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
+            if B3.collidepoint(mouse_x,mouse_y):
+                pygame.draw.rect(screen,(255,0,0),[200,375,200,200],5)
+                instruction_text = Instruction_text("Box")
+                draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
+            if B4.collidepoint(mouse_x,mouse_y):
+                pygame.draw.rect(screen,(255,0,0),[500,375,200,200],5)
+                instruction_text = Instruction_text("Tetris")
+                draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
+
         else:
             if (game_explain):
                 home_button = create_home_button(screen, font, WHITE, BLACK)
-
-                Breakgame_button, Break_func = create_button(WIDTH // 3, HEIGHT // 4, "벽돌 깨기 게임", main_page, highlight=True)
-                Omok_button, Omok_func = create_button(WIDTH // 3 + 300, HEIGHT // 4, "오목 게임", main_page, highlight=True)
-                Box_button, Box_func = create_button(WIDTH // 3, HEIGHT // 4 + 300, "2048 게임", main_page, highlight=True)
-                Tetris_button, Tetris_func = create_button(WIDTH // 3 + 300, HEIGHT // 4 + 300, "테트리스 게임", main_page, highlight=True)
-
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                if Breakgame_button.collidepoint(mouse_x,mouse_y):
-                    instruction_text = Instruction_text("Break")
-                    draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
-                if Omok_button.collidepoint(mouse_x,mouse_y):
-                    instruction_text = Instruction_text("Omok")
-                    draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
-                if Box_button.collidepoint(mouse_x,mouse_y):
-                    instruction_text = Instruction_text("Box")
-                    draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)    
-                if Tetris_button.collidepoint(mouse_x,mouse_y):
-                    instruction_text = Instruction_text("Tetris")
-                    draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
 
             else:
                 # 텍스트 그리기 (크기 조정)
@@ -160,8 +168,7 @@ def main_page():
                 title_rect = title_text.get_rect(center=(WIDTH // 2, 100))  
                 screen.blit(title_text, title_rect)
 
-                start_button, game_func = create_button(WIDTH // 2, HEIGHT // 2 - 30, "게임 선택", main_page, highlight=True)
-                explain_button, explain_func = create_button(WIDTH // 2, HEIGHT // 2 + 30, "게임 설명", main_page, highlight=True)
+                start_button, game_func = create_button(WIDTH // 2, HEIGHT // 2, "게임 선택", main_page, highlight=True)
 
         # 이벤트 처리
         for event in pygame.event.get():
@@ -174,26 +181,29 @@ def main_page():
                     if home_button.collidepoint(x,y):
                         game_started = False
                     if B1.collidepoint(x, y):
+                        pygame.mixer.music.pause()
                         game1_page(screen, font, WHITE, BLACK)
                         game_started = False
+                        pygame.mixer.music.play(-1)  # -1은 무한 반복 재생
                     elif B2.collidepoint(x, y):
+                        pygame.mixer.music.pause()
                         game2_page(screen, font, small_font, WHITE, BLACK) 
                         game_started = False
+                        pygame.mixer.music.play(-1)  # -1은 무한 반복 재생
                     elif B3.collidepoint(x, y):
+                        pygame.mixer.music.pause()
                         game3_page(screen, font, WHITE, BLACK)
                         game_started = False
+                        pygame.mixer.music.play(-1)  # -1은 무한 반복 재생
                     elif B4.collidepoint(x, y):
+                        pygame.mixer.music.pause()
                         game4_page(screen, font, WHITE, BLACK)
                         game_started = False
+                        pygame.mixer.music.play(-1)  # -1은 무한 반복 재생
                 else:                                                       # 메인 화면 ( 게임 선택 전 )
-                    if(game_explain):
-                        if home_button.collidepoint(x,y):
-                            game_explain = False
-                    else:
-                        if start_button.collidepoint(x, y):
-                            game_started = True
-                    if explain_button.collidepoint(x,y):
-                        game_explain = True
+                    if start_button.collidepoint(x, y):
+                        game_started = True
+
 
 
 

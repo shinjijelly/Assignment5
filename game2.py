@@ -104,6 +104,7 @@ def check_line(board, row, col, d_row, d_col):
     return count == 5
 
 def game2_page(screen, font, small_font, WHITE, BLACK):
+    pygame.display.set_caption("오목 게임")
     global turn, board
     winner = 0
     while True:
@@ -129,6 +130,7 @@ def game2_page(screen, font, small_font, WHITE, BLACK):
                         sys.exit()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if home_button.collidepoint(event.pos):
+                            pygame.display.set_caption("미니게임 모음.zip")
                             reset_game()
                             return
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:

@@ -88,8 +88,7 @@ def Instruction_text(game_type):
                             "1. 좌우 방향키로 패들을 움직입니다.\n"
                             "2. 패들로 공을 부딪혀 벽돌을 모두 부수게 되면 다음 스테이지로 진출합니다.\n"
                             "3. 노란색 벽돌은 모두 두 번 부딪혀야 제거됩니다.\n"
-                            "4. 공이 화면 밖으로 나가게 되면 게임이 종료됩니다.\n"
-                            "5. 게임 종료 화면에서 스페이스바를 눌러 게임을 다시 시작할 수 있습니다.") 
+                            "4. 공이 화면 밖으로 나가게 되면 게임이 종료됩니다.")
     if game_type == "Omok":
         Instruction_text = (
                             "1. 두 명의 플레이어가 번갈아 가며 돌을 놓습니다.\n"
@@ -102,8 +101,7 @@ def Instruction_text(game_type):
                             "1. 방향키로 타일을 이동시킵니다.\n"
                             "2. 같은 숫자의 타일이 충돌하면 합쳐집니다.\n"
                             "3. 방향키 이동 시 새로운 타일이 빈 칸에 나타납니다.\n"
-                            "4. 격자가 꽉 차서 더 이상 이동할 수 없으면 게임은 종료됩니다.\n"
-                            "5. 게임 종료 시 'S' 키를 눌러 게임을 다시 시작할 수 있습니다.")
+                            "4. 타일이 꽉 차서 더 이상 이동할 수 없으면 게임은 종료됩니다.")
     if game_type == "Tetris":
         Instruction_text =  (
                             "1. .\n"
@@ -156,7 +154,7 @@ def main_page():
 
             else:
                 # 텍스트 그리기 (크기 조정)
-                title_font_size = 100  # Adjust the font size here
+                title_font_size = 100 
                 title_font = pygame.font.Font(font_path, title_font_size)
                 title_text = title_font.render("미니게임 모음.zip", True, BLACK)
                 title_rect = title_text.get_rect(center=(WIDTH // 2, 100))  
@@ -204,7 +202,7 @@ def main_page():
 
 # 화면 생성
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("미니게임 메인 페이지")
+pygame.display.set_caption("미니게임 모음.zip")
 
 def create_home_button(screen, font, WHITE, BLACK):
     image = pygame.image.load("resources/HomeButton2.png")

@@ -341,8 +341,10 @@ def game1_page(screen, font, WHITE, BLACK):
         clock.tick(60)
 
 def create_home_button(screen, font, WHITE, BLACK):
-    text_surface = font.render("홈", True, WHITE)
-    text_rect = text_surface.get_rect(topleft=(5, 1))
-    pygame.draw.rect(screen, BLACK, text_rect)
-    screen.blit(text_surface, text_rect)
-    return text_rect
+    image = pygame.image.load("resources/HomeButton2.png")
+    button_width, button_height = 50,50
+    image = pygame.transform.scale(image, (button_width, button_height))
+    image_rect = image.get_rect(topleft=(10, 10))
+    screen.blit(image, image_rect)
+
+    return image_rect

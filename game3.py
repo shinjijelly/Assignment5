@@ -299,8 +299,10 @@ def draw_over(screen, clear, over):                                  # 게임이
     screen.blit(game_over_text2, (320, 305))
 
 def create_home_button(screen, font, WHITE, BLACK):
-    text_surface = font.render("홈", True, BLACK)
-    text_rect = text_surface.get_rect(topleft=(10, 10))
-    pygame.draw.rect(screen, WHITE, text_rect)
-    screen.blit(text_surface, text_rect)
-    return text_rect
+    image = pygame.image.load("resources/HomeButton2.png")
+    button_width, button_height = 50,50
+    image = pygame.transform.scale(image, (button_width, button_height))
+    image_rect = image.get_rect(topleft=(10, 10))
+    screen.blit(image, image_rect)
+
+    return image_rect

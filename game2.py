@@ -170,12 +170,13 @@ def game2_page(screen, font, small_font, WHITE, BLACK):
         pygame.display.flip()
 
 def create_home_button(screen, font, WHITE, BLACK):
-    text_surface = font.render("홈", True, BLACK)
-    text_rect = text_surface.get_rect(topleft=(10, 10))
-    pygame.draw.rect(screen, WHITE, text_rect)
-    pygame.draw.rect(screen, BLACK, text_rect, 2)  # 검정색 테두리 추가
-    screen.blit(text_surface, text_rect)
-    return text_rect
+    image = pygame.image.load("resources/HomeButton2.png")
+    button_width, button_height = 50,50
+    image = pygame.transform.scale(image, (button_width, button_height))
+    image_rect = image.get_rect(topleft=(10, 10))
+    screen.blit(image, image_rect)
+
+    return image_rect
 
 def create_help_button(screen, font, WHITE, BLACK):
     text_surface = font.render("도움말", True, BLACK)

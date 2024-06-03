@@ -5,10 +5,6 @@ import math
 def game1_page(screen, font, WHITE, BLACK):
     pygame.display.set_caption("벽돌깨기 게임")
 
-    pygame.mixer.music.load("BreakGame/BGM.wav")
-    pygame.mixer.music.play(-1)
-    pygame.mixer.music.set_volume(0.1)
-
     collision_sound = pygame.mixer.Sound("BreakGame/pingpong.mp3")
     break_sound = pygame.mixer.Sound("BreakGame/break.mp3")
     next_sound = pygame.mixer.Sound("BreakGame/next.mp3")
@@ -233,8 +229,7 @@ def game1_page(screen, font, WHITE, BLACK):
                     stage = 1
                     game_over = False
                     game_start = False
-                    pygame.mixer.music.load("Breakgame/BGM.wav")
-                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.pause()
                     pygame.display.flip()
                 if event.key == pygame.K_m:                    # mute all
                     is_muted = not is_muted

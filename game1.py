@@ -5,9 +5,9 @@ import math
 def game1_page(screen, font, WHITE, BLACK):
     pygame.display.set_caption("벽돌깨기 게임")
 
-    collision_sound = pygame.mixer.Sound("BreakGame/pingpong.mp3")
-    break_sound = pygame.mixer.Sound("BreakGame/break.mp3")
-    next_sound = pygame.mixer.Sound("BreakGame/next.mp3")
+    collision_sound = pygame.mixer.Sound("resources/pingpong.mp3")
+    break_sound = pygame.mixer.Sound("resources/break.mp3")
+    next_sound = pygame.mixer.Sound("resources/next.mp3")
 
     # 색깔 정의
     BLUE = (0, 0, 255)
@@ -51,9 +51,9 @@ def game1_page(screen, font, WHITE, BLACK):
 
         def create_image(self, color, width, height):
             if color == YELLOW:
-                image_path = "Breakgame/yellowbrick.png"  # 노란색 벽돌 이미지 파일 경로
+                image_path = "resources/yellowbrick.png"  # 노란색 벽돌 이미지 파일 경로
             elif color == GREEN:
-                image_path = "Breakgame/greenbrick.png"  # 초록색 벽돌 이미지 파일 경로
+                image_path = "resources/greenbrick.png"  # 초록색 벽돌 이미지 파일 경로
             else:
                 image_path = None
 
@@ -136,7 +136,7 @@ def game1_page(screen, font, WHITE, BLACK):
                     self.speed_y *= -1  # 위쪽 면 충돌
 
                 if(brick.color == YELLOW):
-                    brick.image = pygame.image.load("Breakgame/greenbrick.png").convert_alpha()  # 초록색 벽돌 이미지로 변경
+                    brick.image = pygame.image.load("resources/greenbrick.png").convert_alpha()  # 초록색 벽돌 이미지로 변경
                     brick.color = GREEN
                     brick.image = pygame.transform.scale(brick.image, (brick.rect.width, brick.rect.height))
                     # 벽돌 이미지 업데이트
@@ -147,7 +147,7 @@ def game1_page(screen, font, WHITE, BLACK):
             # 공이 화면 밖으로 벗어나면 게임 오버
             if self.rect.top > screen.get_height():
                 pygame.mixer.music.pause()
-                pygame.mixer.music.load("BreakGame/Gameover.ogg")
+                pygame.mixer.music.load("resources/Gameover.ogg")
                 pygame.mixer.music.play(-1)
                 return True
 
@@ -167,7 +167,7 @@ def game1_page(screen, font, WHITE, BLACK):
     right_wall.rect.top = 50  # 천장 밑부터 시작  
 
     #paddle = Paddle(BLUE, 100, 10)
-    paddle = Paddle("Breakgame/paddle.png",100,15)
+    paddle = Paddle("resources/paddle.png",100,15)
 
     # 패들의 초기 위치를 조정하여 좌우 벽 밖에 위치하도록 설정
     paddle.rect.centerx = screen.get_width() // 2  # 화면 가로 중앙
@@ -175,7 +175,7 @@ def game1_page(screen, font, WHITE, BLACK):
 
     # 게임1 페이지 내에서 공 객체 생성
     #ball = Ball((255, 0, 0), 5, 7)
-    ball = Ball("Breakgame/ball.png",7)
+    ball = Ball("resources/ball.png",7)
 
     game_start = False
     game_over = False
@@ -192,7 +192,7 @@ def game1_page(screen, font, WHITE, BLACK):
         background_image = pygame.transform.scale(background_image, (screen.get_width(), screen.get_height()))
         return background_image
     
-    background_image = load_background_image("Breakgame/background.jpg", screen)
+    background_image = load_background_image("resources/background.jpg", screen)
 
     reset_text_blink = True  # 텍스트 깜빡임을 제어하기 위한 플래그
 
@@ -222,7 +222,7 @@ def game1_page(screen, font, WHITE, BLACK):
                     pygame.display.set_caption("미니게임 메인 페이지")
                     return
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and game_over:  # 게임 오버 상태에서 스페이스바가 눌린 경우
+                if event.key == pygame.K_s and game_over:  # 게임 오버 상태에서 s키가 눌린 경우
                     bricks_group.empty()
                     ball.start()
                     initial_n = 3
@@ -324,7 +324,7 @@ def game1_page(screen, font, WHITE, BLACK):
 
             # "Press spacebar to reset" 텍스트 표시
             if reset_text_blink:  # 깜빡임 플래그가 True일 때만 텍스트 표시
-                reset_text = font.render("Press Spacebar to game", True, (255, 0, 0))  # 빨간색으로 렌더링
+                reset_text = font.render("Press 's' to reset game", True, (255, 0, 0))  # 빨간색으로 렌더링
                 reset_rect = reset_text.get_rect(center=(screen.get_width() // 2, game_over_rect.bottom + 20))
                 screen.blit(reset_text, reset_rect)
 

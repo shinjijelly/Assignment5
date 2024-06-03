@@ -103,13 +103,14 @@ def check_line(board, row, col, d_row, d_col):
             break
     return count == 5
 
-def game2_page(screen, font, WHITE, BLACK):
+def game2_page(screen, font, small_font, WHITE, BLACK):
     global turn, board
     winner = 0
     while True:
         draw_gradient_background(screen, (255, 255, 255), BACKGROUND_COLOR)
         
         home_button = create_home_button(screen, font, WHITE, BLACK)
+        help_button = create_help_button(screen, font, WHITE, BLACK)
         
         draw_board(screen)
         
@@ -118,7 +119,7 @@ def game2_page(screen, font, WHITE, BLACK):
             winner = check_winner(board)
         
         if winner:
-            draw_rounded_text_box(screen, f"Player {winner} Wins!", font, screen.get_width() // 2, screen.get_height() // 2, RED, WHITE)
+            draw_text_box_with_newline(screen, f"Player {winner} Wins!\n다시 시작 하려면 's'를 누르세요", font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=180)
             pygame.display.flip()
             waiting_for_restart = True
             while waiting_for_restart:
@@ -128,7 +129,13 @@ def game2_page(screen, font, WHITE, BLACK):
                         sys.exit()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if home_button.collidepoint(event.pos):
+                            reset_game()
                             return
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+                        board = [[0 for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
+                        turn = 1
+                        winner = 0
+                        waiting_for_restart = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -136,6 +143,7 @@ def game2_page(screen, font, WHITE, BLACK):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if home_button.collidepoint(event.pos):
+                    reset_game()
                     return
                 if not winner:
                     mouse_x, mouse_y = event.pos
@@ -148,6 +156,17 @@ def game2_page(screen, font, WHITE, BLACK):
                             board[row][col] = turn
                             turn = 3 - turn  # 턴 변경 (1 <-> 2)
 
+        # 도움말 버튼에 마우스가 올려져 있을 때 게임 방법 표시
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        if help_button.collidepoint(mouse_x, mouse_y):
+            instruction_text = ("게임 방법:\n"
+                                "1. 두 명의 플레이어가 번갈아 가며 돌을 놓습니다.\n"
+                                "2. 흑돌이 먼저 시작합니다.\n"
+                                "3. 돌은 빈 칸에만 놓을 수 있습니다.\n"
+                                "4. 마우스로 보드 위의 빈 칸을 클릭하여 돌을 놓습니다.\n"
+                                "5. 먼저 가로, 세로, 대각선으로 5개의 돌을 연속으로 놓는 플레이어가 이깁니다.")
+            draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=180)
+
         pygame.display.flip()
 
 def create_home_button(screen, font, WHITE, BLACK):
@@ -158,34 +177,56 @@ def create_home_button(screen, font, WHITE, BLACK):
     screen.blit(text_surface, text_rect)
     return text_rect
 
-def draw_rounded_rect(surface, color, rect, radius):
-    pygame.gfxdraw.aacircle(surface, rect.left + radius, rect.top + radius, radius, color)
-    pygame.gfxdraw.filled_circle(surface, rect.left + radius, rect.top + radius, radius, color)
+def create_help_button(screen, font, WHITE, BLACK):
+    text_surface = font.render("도움말", True, BLACK)
+    text_rect = text_surface.get_rect(topleft=(screen.get_width() - 110, 10))
+    pygame.draw.rect(screen, WHITE, text_rect)
+    pygame.draw.rect(screen, BLACK, text_rect, 2)  # 검정색 테두리 추가
+    screen.blit(text_surface, text_rect)
+    return text_rect
 
-    pygame.gfxdraw.aacircle(surface, rect.right - radius - 1, rect.top + radius, radius, color)
-    pygame.gfxdraw.filled_circle(surface, rect.right - radius - 1, rect.top + radius, radius, color)
+def draw_text_box_with_newline(surface, text, font, x, y, box_color, text_color, alpha=255):
+    lines = text.split('\n')
+    max_width = max(font.size(line)[0] for line in lines)
+    total_height = sum(font.size(line)[1] for line in lines)
 
-    pygame.gfxdraw.aacircle(surface, rect.left + radius, rect.bottom - radius - 1, radius, color)
-    pygame.gfxdraw.filled_circle(surface, rect.left + radius, rect.bottom - radius - 1, radius, color)
+    text_surface = pygame.Surface((max_width + 20, total_height + 20), pygame.SRCALPHA)
+    text_surface.fill((*box_color, alpha))
 
-    pygame.gfxdraw.aacircle(surface, rect.right - radius - 1, rect.bottom - radius - 1, radius, color)
-    pygame.gfxdraw.filled_circle(surface, rect.right - radius - 1, rect.bottom - radius - 1, radius, color)
+    y_offset = 10
+    for line in lines:
+        line_surface = font.render(line, True, text_color)
+        text_surface.blit(line_surface, (10, y_offset))
+        y_offset += font.size(line)[1]
 
-    pygame.draw.rect(surface, color, (rect.left + radius, rect.top, rect.width - 2 * radius, rect.height))
-    pygame.draw.rect(surface, color, (rect.left, rect.top + radius, rect.width, rect.height - 2 * radius))
+    surface.blit(text_surface, (x - (max_width + 20) // 2, y - (total_height + 20) // 2))
+    pygame.draw.rect(surface, BLACK, text_surface.get_rect(topleft=(x - (max_width + 20) // 2, y - (total_height + 20) // 2)), 2)
 
-def draw_rounded_text_box(surface, text, font, x, y, box_color, text_color):
-    text_surface = font.render(text, True, text_color)
-    text_rect = text_surface.get_rect(center=(x, y))
-    background_rect = text_rect.inflate(40, 20)
-    draw_rounded_rect(surface, box_color, background_rect, 20)
-    pygame.draw.rect(surface, BLACK, background_rect, 2, border_radius=20)
-    surface.blit(text_surface, text_rect)
+def draw_multiline_text_box(surface, text, font, x, y, box_color, text_color, alpha=255):
+    lines = text.split('\n')
+    max_width = max(font.size(line)[0] for line in lines)
+    total_height = sum(font.size(line)[1] for line in lines)
+
+    text_surface = pygame.Surface((max_width + 20, total_height + 20), pygame.SRCALPHA)
+    text_surface.fill((*box_color, alpha))
+
+    y_offset = 10
+    for line in lines:
+        line_surface = font.render(line, True, text_color)
+        text_surface.blit(line_surface, (10, y_offset))
+        y_offset += font.size(line)[1]
+
+    surface.blit(text_surface, (x - (max_width + 20) // 2, y - (total_height + 20) // 2))
 
 def draw_text(text, font, color, surface, x, y):
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect(center=(x, y))
     surface.blit(textobj, textrect)
+
+def reset_game():
+    global board, turn
+    board = [[0 for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
+    turn = 1
 
 # 메인 페이지 실행
 if __name__ == '__main__':
@@ -194,4 +235,5 @@ if __name__ == '__main__':
     pygame.display.set_caption("오목 게임")
     font_path = "C:/Windows/Fonts/arial.ttf"  # Windows의 경우
     font = pygame.font.Font(font_path, 36)
-    game2_page(screen, font, WHITE, BLACK)
+    small_font = pygame.font.Font(font_path, 24)  # 작은 글씨 폰트 추가
+    game2_page(screen, font, small_font, WHITE, BLACK)

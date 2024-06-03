@@ -15,10 +15,10 @@ WIDTH, HEIGHT = 900, 700
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-
 # 폰트 설정 (경로를 시스템에 맞게 조정)
 font_path = "C:/Windows/Fonts/malgun.ttf"  # Windows의 경우
 font = pygame.font.Font(font_path, 36)
+small_font = pygame.font.Font(font_path, 24)  # 작은 글씨 폰트 추가
 
 # 버튼 생성 함수
 def create_button(x, y, text, game_func):
@@ -44,7 +44,7 @@ def main_page():
                 if B1.collidepoint(x, y):
                     game1_page(screen, font, WHITE, BLACK)
                 elif B2.collidepoint(x, y):
-                    game2_page(screen, font, WHITE, BLACK)
+                    game2_page(screen, font, small_font, WHITE, BLACK)  # 작은 글씨 폰트 추가
                 elif B3.collidepoint(x, y):
                     game3_page(screen, font, WHITE, BLACK)
                 elif B4.collidepoint(x, y):

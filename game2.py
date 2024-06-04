@@ -145,6 +145,7 @@ def game2_page(screen, font, small_font, WHITE, BLACK):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if home_button.collidepoint(event.pos):
+                    pygame.display.set_caption("미니게임 모음.zip")
                     reset_game()
                     return
                 if not winner:

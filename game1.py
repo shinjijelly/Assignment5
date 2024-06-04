@@ -219,7 +219,7 @@ def game1_page(screen, font, WHITE, BLACK):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if home_button.collidepoint(event.pos):
                     pygame.mixer.music.pause()
-                    pygame.display.set_caption("미니게임 메인 페이지")
+                    pygame.display.set_caption("미니게임 모음.zip")
                     return
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s and game_over:  # 게임 오버 상태에서 s키가 눌린 경우

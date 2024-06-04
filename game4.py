@@ -140,9 +140,9 @@ def game4_page(screen, font, WHITE, BLACK):
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if restart_button.collidepoint(event.pos):
-                        return True  # 재시작
+                        return "restart"
                     elif main_menu_button.collidepoint(event.pos):
-                        return False  # 메인 화면으로 이동
+                        return "main_menu"
 
             game_display.fill(BLACK)
             draw_text("GAME OVER", 64, (255,0,0), frame_width // 2 - 150, frame_height // 2 - 50)
@@ -158,23 +158,22 @@ def game4_page(screen, font, WHITE, BLACK):
             pygame.display.update()
 
     def game_over():
-        game_over_screen(screen, font, WHITE, BLACK)
-        # 게임 재시작 또는 메인 화면으로 이동할 선택을 받음
-        restart = game_over_screen(screen, font, WHITE, BLACK)
-        if restart:  # 게임 재시작을 선택한 경우
-            # 게임 상태 초기화
-            global field, score, level, current_shape, current_shape_index, current_color, current_rotation
-            field = [[0 for _ in range(game_field_width // block_size)] for _ in range(game_field_height // block_size)]
-            score = 0
-            level = 1
-            # 새로운 블록 생성
-            current_shape, current_shape_index, current_color, current_rotation = new_shape()
-        else:  # 메인 화면으로 이동을 선택한 경우
-            pygame.display.set_caption("미니게임 메인 페이지")
-            return
+        action = game_over_screen(screen, font, WHITE, BLACK)
+        if action == "restart":
+            reset_game()
+        elif action == "main_menu":
+            return "main_menu"
+
+    def reset_game():
+        nonlocal field, score, level, current_shape, current_shape_index, current_color, current_rotation, fall_time
+        field = [[0 for _ in range(game_field_width // block_size)] for _ in range(game_field_height // block_size)]
+        score = 0
+        level = 1
+        current_shape, current_shape_index, current_color, current_rotation = new_shape()
+        fall_time = 0
 
     def increase_score(lines_removed):
-        global score, level
+        nonlocal score, level
         score += lines_removed * 100
         level = score // 1000 + 1  # 점수 1000점 당 1 레벨 증가
 
@@ -190,8 +189,7 @@ def game4_page(screen, font, WHITE, BLACK):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if home_button.collidepoint(event.pos):
-                    pygame.display.set_caption("미니게임 메인 페이지")
-                    return    
+                    return
 
         # 키 입력 이벤트 설정
         keys = pygame.key.get_pressed()
@@ -219,7 +217,6 @@ def game4_page(screen, font, WHITE, BLACK):
             move_delay = 10
         if keys[pygame.K_SPACE]:
             current_shape = drop_block()
-    
 
         move_delay -= 1
 
@@ -235,7 +232,9 @@ def game4_page(screen, font, WHITE, BLACK):
                 score += lines_removed * 100
                 current_shape, current_shape_index, current_color, current_rotation = new_shape()
                 if check_collision(current_shape, field):
-                    game_over()
+                    action = game_over()
+                    if action == "main_menu":
+                        return
 
         draw_field()
 

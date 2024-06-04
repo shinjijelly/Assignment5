@@ -23,12 +23,13 @@ color = {0: (180,180,180),
 board_values = [ [0 for i in range(4)] for i in range(4)] 
 
 score=0
-file = open('high_score','r')
+file = open('resources/high_score','r')
 init_score = int(file.readline())
 file.close()
 high_score = init_score
 
 def game3_page(screen, font, WHITE, BLACK):
+    pygame.display.set_caption("2048 게임")
     global board_values
     global score
     global high_score
@@ -36,7 +37,7 @@ def game3_page(screen, font, WHITE, BLACK):
 
     create= True
     create_count=0
-    title = pygame.font.SysFont("arial", 100,True)
+    title = pygame.font.SysFont("resources/mainFont2.ttf" , 100,True)
     title_text = title.render("2048",True,(119,110,101))
     game_over = False
     game_clear = False
@@ -61,7 +62,7 @@ def game3_page(screen, font, WHITE, BLACK):
         if game_over or game_clear:
             draw_over(screen, game_clear, game_over)
             if high_score > init_score:             #최고점 갱신했으면 업데이트
-                file = open('high_score', 'w')
+                file = open('resources/high_score', 'w')
                 file.write(f'{high_score}')
                 file.close()
                 init_score=high_score
@@ -73,6 +74,7 @@ def game3_page(screen, font, WHITE, BLACK):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if home_button.collidepoint(event.pos):
+                    pygame.display.set_caption("미니게임 모음.zip")
                     return
             elif event.type == pygame.KEYUP:
                 if game_over or game_clear:         # 게임 오버된 경우
@@ -109,7 +111,7 @@ def draw_board(screen):
 
     pygame.draw.rect(screen,color['gamebg'],[250,200,400,400], 0,10)
     
-    font = pygame.font.Font('C:/Windows/Fonts/malgun.ttf',25)
+    font = pygame.font.Font("resources/mainFont2.ttf" ,25)
 
     score_text = font.render(f'Score: {score}', True, 'black')
     high_score_text = font.render(f'High: {high_score}', True, 'black')
@@ -133,7 +135,7 @@ def draw_block(screen):
             block_color = color[value]              #  값에 맞는 색깔
             pygame.draw.rect(screen,block_color,[247 + j * 95 + 20, 197 + i * 95 + 20, 80, 80],0,10)    # 그리기
             if value > 0:
-                font = pygame.font.SysFont('arial',30)
+                font = pygame.font.SysFont("resources/mainFont2.ttf" ,30)
                 value_text = font.render(str(value),True, 'black')
                 text_rect = value_text.get_rect(center=(249 + j * 95 + 59, 198 + i * 95 + 57))          # 숫자 
                 screen.blit(value_text,text_rect)
@@ -285,9 +287,9 @@ def move(direction, board):
     return board, clear
 
 def draw_over(screen, clear, over):                                  # 게임이 끝나면
-
-    font = pygame.font.SysFont('arial',30)
-    pygame.draw.rect(screen, 'black', [300, 250, 300, 100], 0, 10)
+    font_path = "resources/mainFont2.ttf" 
+    font = pygame.font.Font(font_path, 28)
+    pygame.draw.rect(screen, 'black', [300, 250, 320, 100], 0, 10)
 
     if clear:
         game_over_text1 = font.render('Game Clear!', True, 'white')
@@ -296,11 +298,13 @@ def draw_over(screen, clear, over):                                  # 게임이
 
     game_over_text2 = font.render('Press S key to Restart', True, 'white')
     screen.blit(game_over_text1, (380, 265))
-    screen.blit(game_over_text2, (320, 305))
+    screen.blit(game_over_text2, (310, 305))
 
 def create_home_button(screen, font, WHITE, BLACK):
-    text_surface = font.render("홈", True, BLACK)
-    text_rect = text_surface.get_rect(topleft=(10, 10))
-    pygame.draw.rect(screen, WHITE, text_rect)
-    screen.blit(text_surface, text_rect)
-    return text_rect
+    image = pygame.image.load("resources/HomeButton2.png")
+    button_width, button_height = 50,50
+    image = pygame.transform.scale(image, (button_width, button_height))
+    image_rect = image.get_rect(topleft=(10, 10))
+    screen.blit(image, image_rect)
+
+    return image_rect

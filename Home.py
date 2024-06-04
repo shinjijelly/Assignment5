@@ -94,7 +94,8 @@ def Instruction_text(game_type):
                             "1. 좌우 방향키로 패들을 움직입니다.\n"
                             "2. 패들로 공을 부딪혀 벽돌을 모두 부수게 되면 다음 스테이지로 진출합니다.\n"
                             "3. 노란색 벽돌은 모두 두 번 부딪혀야 제거됩니다.\n"
-                            "4. 공이 화면 밖으로 나가게 되면 게임이 종료됩니다.")
+                            "4. 공이 화면 밖으로 나가게 되면 게임이 종료됩니다.\n"
+                            "5. 벽돌을 모두 부수면 다음 스테이지로 이동합니다.")
     if game_type == "Omok":
         Instruction_text = (
                             "[오목]\n"
@@ -113,11 +114,12 @@ def Instruction_text(game_type):
     if game_type == "Tetris":
         Instruction_text =  (
                             "[테트리스]\n"
-                            "1. .\n"
-                            "2. .\n"
-                            "3. .\n"
-                            "4. .\n"
-                            "5. .")
+                            "1. 좌우 방향키를 이용하여 블록의 떨어지는 위치를 바꿀 수 있습니다.\n"
+                            "2. 위 방향키를 이용하여 블록을 회전시킬 수 있습니다.\n"
+                            "3. 아래 방향키를 이용하여 블록을 더 빠르게 낙하시킬 수 있습니다.\n"
+                            "4. 스페이스바를 누르면 블록이 바로 바닥으로 떨어집니다.\n"
+                            "5. 가로 한 줄이 가득 차면 해당 라인은 삭제됩니다.\n"
+                            "6. 점수 1000점 당 레벨이 증가합니다.")
     return Instruction_text
 
 # 메인 페이지 루프
@@ -140,19 +142,19 @@ def main_page():
 
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if B1.collidepoint(mouse_x,mouse_y):
-                pygame.draw.rect(screen,(255,0,0),[200,75,200,200],5)
+                pygame.draw.rect(screen,(255,255,255),[200,75,200,200],5)
                 instruction_text = Instruction_text("Break")
                 draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
             if B2.collidepoint(mouse_x,mouse_y):
-                pygame.draw.rect(screen,(255,0,0),[500,75,200,200],5)
+                pygame.draw.rect(screen,(255,255,255),[500,75,200,200],5)
                 instruction_text = Instruction_text("Omok")
                 draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
             if B3.collidepoint(mouse_x,mouse_y):
-                pygame.draw.rect(screen,(255,0,0),[200,375,200,200],5)
+                pygame.draw.rect(screen,(255,255,255),[200,375,200,200],5)
                 instruction_text = Instruction_text("Box")
                 draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
             if B4.collidepoint(mouse_x,mouse_y):
-                pygame.draw.rect(screen,(255,0,0),[500,375,200,200],5)
+                pygame.draw.rect(screen,(255,255,255),[500,375,200,200],5)
                 instruction_text = Instruction_text("Tetris")
                 draw_multiline_text_box(screen, instruction_text, small_font, screen.get_width() // 2, screen.get_height() // 2, BLACK, WHITE, alpha=220)
 
@@ -184,6 +186,7 @@ def main_page():
                         pygame.mixer.music.pause()
                         game1_page(screen, font, WHITE, BLACK)
                         game_started = False
+                        pygame.mixer.music.load('resources/mainbgm.ogg')
                         pygame.mixer.music.play(-1)  # -1은 무한 반복 재생
                     elif B2.collidepoint(x, y):
                         pygame.mixer.music.pause()
@@ -204,8 +207,9 @@ def main_page():
                     if start_button.collidepoint(x, y):
                         game_started = True
 
-
-
+        mouse_x,mouse_y = pygame.mouse.get_pos()
+        if not game_started and start_button.collidepoint(mouse_x,mouse_y):
+            pygame.draw.rect(screen,(255,255,255),[350,323,200,55],5)
 
         # 화면 업데이트
         pygame.display.flip()

@@ -147,7 +147,7 @@ def game4_page(screen, font, WHITE, BLACK):
             # 홈 버튼 그리기
             home_button = create_home_button(screen, font, WHITE, BLACK)
 
-            draw_text("GAME OVER", 64, (255,0,0), frame_width // 2 - 130, frame_height // 2 - 50)
+            draw_text("GAME OVER", 64, (255, 0, 0), frame_width // 2 - 130, frame_height // 2 - 50)
 
             restart_button = pygame.Rect(frame_width // 2 - 160, frame_height // 2 + 50, 200, 50)
             pygame.draw.rect(game_display, WHITE, restart_button)
@@ -221,7 +221,7 @@ def game4_page(screen, font, WHITE, BLACK):
             else:
                 merge_shape(current_shape, current_color, field)
                 field, lines_removed = remove_full_lines(field)
-                score += lines_removed * 100
+                increase_score(lines_removed)
                 current_shape, current_shape_index, current_color, current_rotation = new_shape()
                 if check_collision(current_shape, field):
                     action = game_over()

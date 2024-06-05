@@ -3,14 +3,13 @@ import sys
 import random
 
 def game4_page(screen, font, WHITE, BLACK):
-    
     frame_width = 900
     frame_height = 700
     block_size = 20  # 블록 크기 조정
     score = 0
     level = 1
 
-    pygame.display.set_caption("Tetris")
+    pygame.display.set_caption("테트리스")
 
     game_display = pygame.display.set_mode((frame_width, frame_height))
     clock = pygame.time.Clock()
@@ -124,45 +123,37 @@ def game4_page(screen, font, WHITE, BLACK):
         game_display.blit(text_surface, text_rect)
 
     def create_home_button(screen, font, WHITE, BLACK):
-        text_surface = font.render("홈", True, WHITE)
-        text_rect = text_surface.get_rect(topleft=(5, 1))
-        pygame.draw.rect(screen, BLACK, text_rect)
-        screen.blit(text_surface, text_rect)
-        return text_rect
-    
-    def game_over_screen(screen, font, WHITE, BLACK):
-        game_over = True
+        image = pygame.image.load("resources/HomeButton2.png")
+        button_width, button_height = 50,50
+        image = pygame.transform.scale(image, (button_width, button_height))
+        image_rect = image.get_rect(topleft=(10, 10))
+        screen.blit(image, image_rect)
 
-        while game_over:
+        return image_rect
+
+    def game_over():
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if restart_button.collidepoint(event.pos):
+                    if home_button.collidepoint(event.pos):
+                        return "home"
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_s:
                         return "restart"
-                    elif main_menu_button.collidepoint(event.pos):
-                        return "main_menu"
 
-            game_display.fill(BLACK)
-            draw_text("GAME OVER", 64, (255,0,0), frame_width // 2 - 150, frame_height // 2 - 50)
+            # 홈 버튼 그리기
+            home_button = create_home_button(screen, font, WHITE, BLACK)
 
-            restart_button = pygame.Rect(frame_width // 2 - 100, frame_height // 2 + 50, 200, 50)
+            draw_text("GAME OVER", 64, (255, 0, 0), frame_width // 2 - 130, frame_height // 2 - 50)
+
+            restart_button = pygame.Rect(frame_width // 2 - 160, frame_height // 2 + 50, 200, 50)
             pygame.draw.rect(game_display, WHITE, restart_button)
-            draw_text("GAME RESET", 36, BLACK, restart_button.x + 18, restart_button.y + 5)
-
-            main_menu_button = pygame.Rect(frame_width // 2 - 100, frame_height // 2 + 120, 200, 50)
-            pygame.draw.rect(game_display, WHITE, main_menu_button)
-            draw_text("MAIN HOME", 36, BLACK, main_menu_button.x + 23, main_menu_button.y + 5)
+            draw_text("PRESS 'S' TO RESET GAME", 36, BLACK, restart_button.x, restart_button.y + 5)
 
             pygame.display.update()
-
-    def game_over():
-        action = game_over_screen(screen, font, WHITE, BLACK)
-        if action == "restart":
-            reset_game()
-        elif action == "main_menu":
-            return "main_menu"
 
     def reset_game():
         nonlocal field, score, level, current_shape, current_shape_index, current_color, current_rotation, fall_time
@@ -189,6 +180,7 @@ def game4_page(screen, font, WHITE, BLACK):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if home_button.collidepoint(event.pos):
+                    pygame.display.set_caption("미니게임 모음.zip")
                     return
 
         # 키 입력 이벤트 설정
@@ -229,12 +221,15 @@ def game4_page(screen, font, WHITE, BLACK):
             else:
                 merge_shape(current_shape, current_color, field)
                 field, lines_removed = remove_full_lines(field)
-                score += lines_removed * 100
+                increase_score(lines_removed)
                 current_shape, current_shape_index, current_color, current_rotation = new_shape()
                 if check_collision(current_shape, field):
                     action = game_over()
-                    if action == "main_menu":
+                    if action == "home":
+                        pygame.display.set_caption("미니게임 모음.zip")
                         return
+                    elif action == "restart":
+                        reset_game()
 
         draw_field()
 
@@ -249,4 +244,3 @@ def game4_page(screen, font, WHITE, BLACK):
 
         pygame.display.update()
         clock.tick(60)
-        
